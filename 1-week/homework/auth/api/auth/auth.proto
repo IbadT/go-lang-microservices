@@ -1,0 +1,78 @@
+syntax = "proto3";
+
+package auth;
+
+import "google/protobuf/timestamp.proto";
+import "google/protobuf/empty.proto";
+import "google/protobuf/wrappers.proto";
+
+option go_package = "github.com/IbadT/go-lang-microservices/week_1/homework/pkg/auth;auth";
+
+enum Role {  
+    ROLE_UNSPECIFIED = 0;  
+    ADMIN = 1;
+    USER = 2;
+}
+
+service Auth {
+    rpc Register(RegisterRequest) returns (RegisterResponse);
+    rpc Get(GetRequest) returns (GetResponse);
+    rpc Update(UpdateRequest) returns (google.protobuf.Empty);
+    rpc Delete(DeleteRequest) returns (google.protobuf.Empty);
+}
+
+//
+
+// Request для создания нового пользователя
+message RegisterRequest {
+    UserInfo info = 1;
+    // string name = 1;                  // Имя пользователя
+    // string email = 2;                 // Email пользователя
+    // Role role = 5;                    // Роль пользователя
+    string password = 3;              // Пароль пользователя
+    string password_confirm = 4;      // Подтверждение пароля
+}
+
+// Response после успешного создания пользователя
+message RegisterResponse {
+    int64 id = 1; // ID созданного пользователя
+}
+
+//
+
+// Request для получения информации о пользователе
+message GetRequest {
+    int64 id = 1; // ID пользователя
+}
+message UserInfo {
+    string email = 1; // Email пользователя
+    string name = 2;  // Имя пользователя
+    Role role = 3;    // Роль пользователя
+}
+// Response с информацией о пользователе
+message GetResponse {
+    int64 id = 1;                     // ID пользователя
+    UserInfo info = 2;                     // Информация о пользователе
+    // string name = 2;                  // Имя пользователя
+    // string email = 3;                 // Email пользователя
+    // Role role = 4;                    // Роль пользователя
+    google.protobuf.Timestamp created_at = 3; // Время создания
+    google.protobuf.Timestamp updated_at = 4; // Время последнего обновления
+}
+
+//
+
+// Request для обновления информации о пользователе
+message UpdateRequest {
+    int64 id = 1;                              // ID пользователя
+    google.protobuf.StringValue name = 2;      // Новое имя (опционально)
+    google.protobuf.StringValue email = 3;     // Новый email (опционально)
+    Role role = 4;                             // Новая роль
+}
+
+//
+
+// Request для удаления пользователя
+message DeleteRequest {
+    int64 id = 1; // ID пользователя для удаления
+}
